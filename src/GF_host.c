@@ -23,6 +23,7 @@ void EList2Array(void);
 void GetPolygonCenter(Vec3*);
 Vec3 Centroid(Vec3, Vec3, Vec3);
 	
+extern int nnum;
 extern int vnum;
 extern int pnum; //number of faces on a model
 int edge_num; //number of edges
@@ -72,7 +73,7 @@ void GravitationalField(double _scale,double const_G,double const_Sigma){
 void GetPolygonCenter(Vec3 *n_points){
 	// Host calculation
 	int i;
-	for(i=0; i < vnum; i++){
+	for(i=0; i < nnum; i++){
 		n_points[i] = Centroid(vlist[plist[i].v[0]], vlist[plist[i].v[1]], vlist[plist[i].v[2]]);			
 	}
 }

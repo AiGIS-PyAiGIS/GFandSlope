@@ -9,7 +9,10 @@
 
 int LoadPolygonData(char*, int*, int*);
 int LoadPointsData(char*, int*);
+int ComputePointsData(int*);
 int ProcessInitial(char*);
+
+extern void GetPolygonCenter(Vec3 *);
 
 extern int START_POLYGON, END_POLYGON;
 extern double PERIOD, DENSITY;
@@ -91,6 +94,15 @@ int LoadPointsData(char* pointsFile, int* nnum){
 	for(int i=0;i<np;i++) fscanf(fp,"%lf %lf %lf",&n_points[i].x, &n_points[i].y, &n_points[i].z);
 	return 1;
 }
+
+int ComputePointsData(int* nnum){
+	fprintf(stderr,">>> Points\n");
+	int np = *nnum;
+	n_points = (Vec3 *)malloc(sizeof(Vec3)*np);
+	GetPolygonCenter(n_points);
+	return 1;
+}
+
 
 
 /*

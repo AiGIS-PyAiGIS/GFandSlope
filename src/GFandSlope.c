@@ -27,9 +27,7 @@
 
 extern void cuda_Devinfo(void);
 extern double cudaKernel_call(int, int, int, Vec3, int, Constant, int);
-extern double cudaKernel_call_np(int, int, int, Vec3, int, Constant);
 extern void cudaTransfer_toDev(int, int, int, Vec3 *, PLIST *, Edge_list *, int, Vec3 *);
-extern void cudaTransfer_toDev_np(int, int, int, Vec3 *, PLIST *, Edge_list *);
 extern void cuda_dealloc(void);
 extern void cuda_HostUpdate(int,Output*);
 
@@ -40,6 +38,7 @@ extern void GetPolygonCenter(Vec3 *);
 
 extern int LoadPolygonData(char*, int*, int*);
 extern int LoadPointsData(char*, int*);//
+extern int ComputePointsData(int*);
 extern int ProcessInitial(char*);
 
 Vec3 *vlist; //list of verteces of the shape model
@@ -47,7 +46,6 @@ PLIST *plist; //list of plates/faces of the shape model
 
 int nnum;//
 Vec3 *n_points; //list of points at which the gravity is to be computed
-
 
 extern Edge_list *elist;
 int vnum; //number of verticies
@@ -85,11 +83,17 @@ int main(int argc, char* argv[]){
 
 		LoadPolygonData(inputFile, &vnum, &pnum);
 		if (strcmp(pointsFile,"NONE")==0) {
-			nnum=vnum;
-			n_points = (Vec3 *)malloc(sizeof(Vec3)*nnum);
-			GetPolygonCenter(n_points);
+//			LoadPointsData(pointsFile,&nnum);
+			fprintf(stderr,"Points Data are computed from the Shape Model (face center)...\n");
+//			nnum=pnum;
+//			n_points = (Vec3 *)malloc(sizeof(Vec3)*nnum);
+//			GetPolygonCenter(n_points);
+			nnum=pnum;
+			ComputePointsData(&nnum);
+			fprintf(stderr,"Number of points: %d\n",nnum);
 		} else {
 			LoadPointsData(pointsFile,&nnum);
+			fprintf(stderr,"Number of points: %d\n",nnum);
 		}
 		
 		fprintf(stderr,"\nData Initialization...\n");
@@ -105,7 +109,7 @@ int main(int argc, char* argv[]){
 		fprintf(stderr,"Number of polygons: %d\n",pnum);
 		fprintf(stderr,"Number of points: %d\n",nnum);
 		fprintf(stderr,"Center of gravity: (%f, %f, %f) km\n",centerOfGravity.x,centerOfGravity.y,centerOfGravity.z);
-		fprintf(stderr,"Volume of polygon: %f m^3\n",volumeOfPolygon);
+		fprintf(stderr,"Volume of polygon: %f km^3\n",volumeOfPolygon/(1000*1000*1000));
 		fprintf(stderr,"============================================================\n\n");
 
 		inp.simpleCalcBoundary = simpleCalcBoundary;
@@ -143,20 +147,26 @@ void OutputResults(char *filename, int nnum, Output *res){
 	fp=fopen(filename,"w");	
 
 	if ( START_POLYGON == 1) {//Results Legend
-		fprintf(fp, "#Data: %s\n",inputFile);
-		fprintf(fp, "#Number of Polygons: %d\n",pnum);  
-		fprintf(fp, "#Number of Points: %d\n",nnum);  
-		fprintf(fp, "#Density: %f [kg/m^3]\n",DENSITY);  
-		if (PERIOD==0.0) {
-			fprintf(fp, "#Rotational Period: NO ROTATION\n");
+		fprintf(fp, "# Shape model: %s\n", inputFile);
+		fprintf(fp, "# Number of Polygons: %d\n", pnum);  
+		if (strcmp(pointsFile,"NONE")==0) {
+			fprintf(fp, "# Point list: %s\n", pointsFile);
+			fprintf(fp, "# Number of Points: %d (polygon centers)\n", nnum);
 		} else {
-			fprintf(fp, "#Rotational Period: %f [h]\n",PERIOD);
+			fprintf(fp, "# Point list: %s\n", pointsFile);
+			fprintf(fp, "# Number of Points: %d\n", nnum);  
 		}
-		fprintf(fp, "#Unit: All coordinates in km, and SI units for other values.\n"); 
-		fprintf(fp, "#PlateID ");
+		fprintf(fp, "# Density: %f [kg/m^3]\n", DENSITY);  
+		if (PERIOD==0.0) {
+			fprintf(fp, "# Rotational Period: NO ROTATION\n");
+		} else {
+			fprintf(fp, "# Rotational Period: %f [h]\n", PERIOD);
+		}
+		fprintf(fp, "# Unit: All coordinates in km, and SI units for other values.\n"); 
+		fprintf(fp, "ID ");
 		fprintf(fp, "Point.x Point.y Point.z ");
 		fprintf(fp, "Lon Lat ");
-		fprintf(fp, "CRefAccx CRefAccy CRefAccz ");
+		fprintf(fp, "CRefAcc.x CRefAcc.y CRefAcc.z ");
 		fprintf(fp, "GravAcc.x GravAcc.y GravAcc.z ");
 		fprintf(fp, "TotalAcc.x TotalAcc.y TotalAcc.z ");
 		fprintf(fp, "Gpotential Rpotential Tpotential ");
@@ -174,7 +184,7 @@ void OutputResults(char *filename, int nnum, Output *res){
 		fprintf(fp, "%.6e %.6e %.6e ", res[i].centRAcc.x, res[i].centRAcc.y, res[i].centRAcc.z);
 		fprintf(fp, "%.6e %.6e %.6e ", res[i].att.x, res[i].att.y, res[i].att.z);
 		fprintf(fp, "%.6e %.6e %.6e ", res[i].att.x-res[i].centRAcc.x, res[i].att.y-res[i].centRAcc.y, res[i].att.z-res[i].centRAcc.z);
-		fprintf(fp, "%.6e %.6e %.6e ", res[i].g_p,res[i].r_p,-1*res[i].g_p-res[i].r_p);
+		fprintf(fp, "%.6e %.6e %.6e ", -1*res[i].g_p,res[i].r_p,-1*res[i].g_p-res[i].r_p);
 		if (strcmp(pointsFile,"NONE")==0) {
 			fprintf(fp, "%e %e %e %e %e ", res[i].slope,res[i].nvec.x,res[i].nvec.y,res[i].nvec.z,res[i].area);
 		}
