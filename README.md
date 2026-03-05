@@ -1,6 +1,10 @@
 # GFandSlope
 CUDA-powered code for calculating gravitational fields and surface slope of irregular shaped small bodies.
 
+<a target="_blank" href="https://colab.research.google.com/github/AiGIS-PyAiGIS/GFandSlope/blob/main/GFandSlope_sample.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
 ## Requirements
 ### Main code
 - NVIDIA CUDA Compiler: `nvcc`
@@ -174,7 +178,11 @@ Two utility python scripts available to prepare input files. They depend on [PyV
 - `Mesh2GFandSlopeInput.py`: Convert a shape model with various formats (obj, stl...) to this format.
 
 ## Sample .pynb notebook
-A sample Jupyter Notebook file to compute gravity on a Google Colab. environment.
+A sample Jupyter Notebook file `GFandSlope_sample.ipynb` to compute gravity on a Google Colab. environment.
+
+<a target="_blank" href="https://colab.research.google.com/github/AiGIS-PyAiGIS/GFandSlope/blob/main/GFandSlope_sample.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
 
 ## Non-GPU version
 Non-GPU version (CPU-based) code is available at [Shape models, their derivatives, and relating data and tools of the asteroid Ryugu used in the paper "Hayabusa2 observations of the top-shape carbonaceous asteroid 162173 Ryugu" by Watanabe et al. (2019).](https://data.darts.isas.jaxa.jp/pub/hayabusa2/paper/Watanabe_2019/)
