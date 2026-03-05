@@ -1,0 +1,7 @@
+// PERIOD[hour], DENSITY[kg/m^3]
+period: 12.1324
+density: 1950
+input_polygon: itokawa_f0049152.txt
+input_points: NONE
+output: itokawa_49k_ro1950_P12.1324h.txt
+gpu: 0
