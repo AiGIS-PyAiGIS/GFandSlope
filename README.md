@@ -1,9 +1,12 @@
 # GFandSlope
 CUDA-powered code for calculating gravitational fields and surface slope of irregular shaped small bodies.
 
+## Non-GPU version
+CPU-based code is available at [Shape models, their derivatives, and relating data and tools of the asteroid Ryugu used in the paper "Hayabusa2 observations of the top-shape carbonaceous asteroid 162173 Ryugu" by Watanabe et al. (2019).](https://data.darts.isas.jaxa.jp/pub/hayabusa2/paper/Watanabe_2019/)
+
 ## References
 1. Kono, F., Nakasato, N., Hirata, N. & Matsumoto, K. Acceleration of Gravitation Field Analysis for Asteroids by GPU Computation. 2021 IEEE 14th Int. Symp. Embed. MulticoreMany-core Syst.--Chip (MCSoC) 00, 8–15 (2021). [doi:10.1109/mcsoc51149.2021.00010](http://doi.org/10.1109/mcsoc51149.2021.00010)
-  
+2. Hirata, N., Matsumoto K., Kono F. & Nakasato N. GPU-Accelerated Gravity-Field Computation for Irregularly Shaped Small Bodies Using CUDA. The 57th Lunar and Planetary Science Conference (LPSC), #1418, (2026).
 
 ## Acknowledgements
 GFandSlope is developed as a research project by the [University of Aizu](https://u-aizu.ac.jp/en/), [Shizuoka Institute of Science and Technology](https://www.sist.ac.jp/en/) and [National Astronomical Observatory of Japan](https://www.nao.ac.jp/en/).
